@@ -220,13 +220,6 @@ df_plot_tdxd_sg <- df_list_tdxd_sg[[2]]
 
 
 
-
-
-
-
-
-
-
 calc_summary_data <- function(df, cost_data, qaly_data, dr_v){
   #The cost values
   cost_pf <- cost_data[1]
@@ -317,18 +310,6 @@ res_vec_tdxd_sg <- calc_summary_data(df_tdxd_sg,
                                      tdxd_sg_cost, 
                                      tdxd_sg_qaly, 
                                      df_list_tdxd_sg[[3]])
-
-
-
-
-
-
-
-
-
-
-
-
 
 #Summary of the results
 df_res <- data.frame(
@@ -435,67 +416,3 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
 df_one_way = list(df_tdxd_chemo, df_chemo_tdxd)
 
 one_way_sensitivity_tdxd_price(df_one_way, df_list_tdxd_chemo[[3]])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#Plot results
-#library(ggplot2)
-#plot_func <- function(df_plot, title){
- # p <- ggplot(df_plot, aes(x = cycle,y = value, group = state, color = state)) +
-  #  geom_line() + 
-   # ggtitle(title) +
-    #xlab("Months from start") + ylab("Probability") + 
-    #theme(
-     # plot.title = element_text(color="dodgerblue4", size=14, face="bold.italic"),
-      #axis.title.x = element_text(color="darkolivegreen4", size=14, face="bold"),
-      #axis.title.y = element_text(color="#993333", size=14, face="bold")
-    #)
-  #return(p)
-#}
-
-#plot_func(df_plot_tdxd_chemo, "Evolution of patients with TDxD first and chemo second")
-#plot_func(df_plot_chemo_chemo, "Evolution of patients with chemo first and second")
-#plot_func(df_plot_chemo_tdxd, "Evolution of patients with chemo first and TDxD second")
-#plot_func(df_plot_tdxd_sg, "Evolution of patients with TDxD first and SG second")
-
-
-
-
-
-
-
-
-#library(dampack)
-#tdxd_icers <- calculate_icers(cost = df_res$DiscountedCost, 
-#                              effect = df_res$DiscountedQALY, 
-#                              strategies = df_res$Strategy)
-
-#plot(tdxd_icers) + 
- # scale_x_continuous(n.breaks = 10) + 
-  #scale_y_continuous(n.breaks = 10) + 
-  #theme(legend.position = c(0.3, 0.7))
-

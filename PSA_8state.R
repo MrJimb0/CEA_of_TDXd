@@ -4,13 +4,11 @@
 options(scipen=999)
 setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
 
-
 library(expm)
+library(dplyr)
 
 #For generating the QALY parameters go to line 570
 #For generating the cost parameters go to line 654
-
-
 
 #Notation used in this file:
 #pf = Progression Free first-line
@@ -19,25 +17,11 @@ library(expm)
 #AE = Adverse Event (not ILD)
 #ILD = Interstitial lund disease
 
-
-
 #Import the results and functions from other files.
 source("finding_transition_probabilities_7state.R") #We get opt_var from this
 source("CEA_8state.R")
 
-
-
-
-
-
-
-
-  
-  
-  
-  
-
-#THIS FUNCTION IS TAKEN FROM JEREMY (HE GAVE US THIS IN ???)
+#The following code is from Jeremy's paper on preference order (referenced in the manuscript, table in supplement)
 # Please reference the manuscript for mathematical notations and variable descriptions.
 CorrelateUtils <- function(U, Q, epsilon, delta){
   n <- nrow(U) #number of PSA samples
@@ -365,7 +349,7 @@ run_PSA <- function(df_params){
     median_os_tdxd <- draw_log_normal(mu = 23.4, sigma = 1.22)
     median_pf_tdxd <- draw_log_normal(mu = 9.9, sigma = 0.59)
     ##Change this in your sensitivity analysis
-    median_pf_sg <- draw_log_normal(mu = (3.25*3000), sigma = (3.25*3000)*0.15)
+    median_pf_sg <- draw_log_normal(mu = (3.25), sigma = (3.25)*0.15)
     
     target_ae_chemo <- draw_log_normal(mu = 0.081, sigma = 0.0203)
     target_ae_tdxd <- draw_log_normal(mu = 0.0757, sigma = 0.0189)
@@ -643,6 +627,10 @@ res <- run_PSA(df_param)
 View(res[[1]])
 jimbo_final_df <- res[[1]]
 jimbo_final_df$ICER <- NULL
+
+jimbo_final_df <- jimbo_final_df %>%
+  filter(sim <= 1000)
+
 hist(jimbo_final_df$DiscountedCost[jimbo_final_df$group == 'Chemo-Chemo'])
 hist(jimbo_final_df$DiscountedCost[jimbo_final_df$group == 'Chemo-TDxd'])
 hist(jimbo_final_df$DiscountedCost[jimbo_final_df$group == 'TDxD-Chemo'])
@@ -663,26 +651,14 @@ mean(jimbo_final_df$DiscountedQALY[jimbo_final_df$group == 'Chemo-TDxd'])
 mean(jimbo_final_df$DiscountedQALY[jimbo_final_df$group == 'TDxD-Chemo'])
 mean(jimbo_final_df$DiscountedQALY[jimbo_final_df$group == 'TDxD-SG'])
 
-#write.csv(jimbo_final_df, file = "/Users/jamesdickerson/Google Drive/Research/Active Projects/CEA T-DXd Project/Final R Code/R Code MAR2024 base case/jimbo_final_df.csv", row.names = FALSE, col.names = TRUE, )
+write.csv(jimbo_final_df, file = "/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/Data_/Outputs/base_case_output.csv")
 
-#Plot the results
-#plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
-#  X<-split(df_psa_res, df_psa_res$group)
-#  means <- data.frame(mean_cost = c(mean(X[[group_name1]]["DiscountedCost"][[1]]), mean(X[[group_name2]]["DiscountedCost"][[1]]), mean(X[[group_name3]]["DiscountedCost"][[1]]), mean(X[[group_name4]]["DiscountedCost"][[1]])),
-#                      mean_qaly = c(mean(X[[group_name1]]["DiscountedQALY"][[1]]), mean(X[[group_name2]]["DiscountedQALY"][[1]]), mean(X[[group_name3]]["DiscountedQALY"][[1]]), mean(X[[group_name4]]["DiscountedQALY"][[1]])),
-#                      group = c(group_name1, group_name2, group_name3, group_name4))
-  
-  
-#  ggplot(df_psa_res, aes(x=DiscountedCost, y=DiscountedQALY, col = group)) + 
-#    geom_point() + 
-#    geom_point(data = means,  
-#               mapping = aes(x = mean_cost, y = mean_qaly, size = 1)) +
- #   labs(x = "Discounted Cost", y = "Discounted QALY") +
-#    theme_bw(base_size = 14)
-#}
-
-
-#plot_psa_scatter(res[[1]], "Chemo-Chemo","Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
-
+#Output Table 
+# Calculate mean by group
+mean_by_group <- jimbo_final_df %>%
+  group_by(group) %>%
+  summarize(mean_DiscountedCost = mean(DiscountedCost),
+            mean_DiscountedQALY = mean(DiscountedQALY),
+            mean_LY = mean(LY))
 
 
