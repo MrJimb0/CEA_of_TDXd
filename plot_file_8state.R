@@ -379,3 +379,32 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
 
 plot_psa_scatter(res[[1]], "Chemo-Chemo","Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
 
+
+
+#CEAC plot
+plot_ceac_curve <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
+  X<-split(df_psa_res, df_psa_res$group)
+  Y = X$`TDxD-Chemo`
+  
+  
+  x = seq(50000, 400000, 10000)
+  y = c()
+  for(i in x){
+    y = append(y, sum(Y$'ICER'<i)/length(Y$'ICER'))
+  }
+  
+  df <- data.frame(treashold = x,
+                   probability = y)
+  print(df)
+  
+  ggplot(data=df, aes(x=treashold, y=probability, group=1)) +
+    geom_line()+
+    geom_point()
+  
+  
+}
+
+
+plot_ceac_curve(res[[1]], "Chemo-Chemo","Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
+
+
