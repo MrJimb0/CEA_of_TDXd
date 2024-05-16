@@ -349,7 +349,7 @@ run_PSA <- function(df_params){
     median_os_tdxd <- draw_log_normal(mu = 23.4, sigma = 1.22)
     median_pf_tdxd <- draw_log_normal(mu = 9.9, sigma = 0.59)
     ##Change this in your sensitivity analysis
-    median_pf_sg <- draw_log_normal(mu = (3.25), sigma = (3.25)*0.15)
+    median_pf_sg <- draw_log_normal(mu = (5.1*1.1), sigma = (5.1*1.1)*0.15)
     
     target_ae_chemo <- draw_log_normal(mu = 0.081, sigma = 0.0203)
     target_ae_tdxd <- draw_log_normal(mu = 0.0757, sigma = 0.0189)
