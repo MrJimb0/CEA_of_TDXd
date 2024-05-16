@@ -5,3 +5,5 @@ You will find the following files:
   The PSA file that pulls from the 7-state transition property file, 8-state transition property file, and CEA base case file 
   The base case CEA that is used for generating graphs 
   The appendix explains in detail why there are 7 and 8 state transition files. Briefly, we use the 7 state to derive the final transition rate (from the terminal to dead) used in the 8 state model. 
+
+The excel files, output csvs, and sensitivty analyses can be provided as well though each should be able to be implemented using the base code provided here
