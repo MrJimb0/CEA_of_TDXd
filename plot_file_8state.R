@@ -330,6 +330,101 @@ plot(tdxd_icers) +
 
 
 
+one_way_sensitivity_tdxd_price <- function(df, dr_v){
+  
+  
+  #cost <- seq(1000, 15000, 500)
+  cost <- seq(1000, 15000, 500)
+  
+  n_sims = length(cost)
+  
+  icer <- c()
+  
+  tdxd_chemo_qaly <- c(qaly_pf = 0.65, 
+                       qaly_p_drug = 0.54, 
+                       qaly_p_nodrug = 0.26, 
+                       qaly_pfAE = 0.547, 
+                       qaly_pAE = 0.54, 
+                       qaly_pfILD = 0.547, 
+                       qaly_pILD = 0.54, 
+                       decrement_qaly_ae = 0.05604)
+  chemo_tdxd_qaly <- c(qaly_pf = 0.65, 
+                       qaly_p_drug = 0.54, 
+                       qaly_p_nodrug = 0.26, 
+                       qaly_pfAE = 0.547, 
+                       qaly_pAE = 0.54, 
+                       qaly_pfILD = 0.547, 
+                       qaly_pILD = 0.54, 
+                       decrement_qaly_ae = 0.0714327)
+  
+  df_tdxd_chemo = df[[1]]
+  df_chemo_tdxd = df[[2]]
+  
+  
+  
+  for(i in cost){
+    
+    tdxd_chemo_cost <- c(cost_pf = i, 
+                         cost_p_drug = 7203.56, 
+                         cost_p_nodrug = 10882.60, 
+                         cost_pfAE = 5093.37, 
+                         cost_pAE = 10882.60, 
+                         cost_pfILD = 5093.37, 
+                         cost_pILD = 10882.60,
+                         additional_cost = 7519.15)
+    
+    chemo_tdxd_cost <- c(cost_pf = 7203.56, 
+                         cost_p_drug = i, 
+                         cost_p_nodrug = 10882.60, 
+                         cost_pfAE = 5093.37, 
+                         cost_pAE = 10882.60, 
+                         cost_pfILD = 5093.37, 
+                         cost_pILD = 10882.60,
+                         additional_cost = 10435.36588)
+    
+    
+    
+    res_vec_tdxd_chemo <- calc_summary_data(df = df_tdxd_chemo, 
+                                            cost_data = tdxd_chemo_cost, 
+                                            qaly_data = tdxd_chemo_qaly, 
+                                            dr_v = dr_v)
+    
+    
+    
+    res_vec_chemo_tdxd <- calc_summary_data(df_chemo_tdxd, 
+                                            chemo_tdxd_cost, 
+                                            chemo_tdxd_qaly, 
+                                            dr_v)
+    
+    icer <- append(icer, (res_vec_tdxd_chemo[2]-res_vec_chemo_tdxd[2])/(res_vec_tdxd_chemo[4] - res_vec_chemo_tdxd[4]))
+    
+    
+  }
+  
+  df <- data.frame(Willingness2Pay = icer,
+                   Cost = cost)
+  
+  ggplot(data=df, aes(x=icer, y=cost, group=1)) +
+    geom_line()+
+    geom_point()
+}
+
+
+
+df_one_way = list(df_tdxd_chemo, df_chemo_tdxd)
+
+one_way_sensitivity_tdxd_price(df_one_way, df_list_tdxd_chemo[[3]])
+
+
+
+
+
+
+
+
+
+
+
 
 source("PSA_8state.R")
 
