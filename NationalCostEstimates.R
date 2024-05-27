@@ -1,5 +1,7 @@
 #This is the script for generating the cost estimates using our model for all payers in the US
 #This script is written by James C Dickerson, MD, MS. Inputs can be found in the manuscript appendix
+library(writexl)
+
 options(scipen=999)
 setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
 
@@ -11,26 +13,26 @@ n <- 54394
 HER2low_low_est <- 0.457
 HER2low_base_est <- 0.557
 HER2low_high_est <- 0.657
-HER2_ultra_low_est <- 0.7557
+HER2_ultra_low_est <- 0.65
 
 #Cost of Care (using our model). The low and high estimates represent two SDs from the mean of the PSA simulation 
 #For now, we have just used the mean values for the cost of each strategy given we are varying the inputs on HER2 low numbers and lines of therapy estimates
 #This is because there is already tremendous imprecision in these estimates 
-c_chemo_low <- 
+#c_chemo_low <- 
 c_chemo_base <- 180252
-c_chemo_high <- 
+#c_chemo_high <- 
 
-c_tdxd_first_low <- 
+#c_tdxd_first_low <- 
 c_tdxd_first_base <- 279810
-c_tdxd_first_high <- 
+#c_tdxd_first_high <- 
 
-c_tdxd_second_low <- 
+#c_tdxd_second_low <- 
 c_tdxd_second_base <- 243834
-c_tdxd_second_high <- 
+#c_tdxd_second_high <- 
 
-c_ADCs_low <- 
+#c_ADCs_low <- 
 c_ADCs_base <- 310036
-c_ADCs_high <- 
+#c_ADCs_high <- 
   
 #Number receiving third line of therapy
 third_low <- 0.35
@@ -78,6 +80,10 @@ for (i in 1:4) {
   }
 }
 
-final_df
+final_df <- as.data.frame(final_df)
 
+output_file <- "data_/final_df.xlsx"
+
+# Save final_df as an Excel file
+write_xlsx(final_df, path = output_file)
 
