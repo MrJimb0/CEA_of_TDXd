@@ -6,7 +6,7 @@ setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerso
 
 #INPUT DATA
 
-tdxd_chemo_cost <- c(cost_pf = 14113.69, 
+tdxd_chemo_cost <- c(cost_pf = 14113.690, 
                      cost_p_drug = 7203.56, 
                      cost_p_nodrug = 10882.60, 
                      cost_pfAE = 5093.37, 
