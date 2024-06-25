@@ -613,7 +613,7 @@ run_PSA <- function(df_params){
 
 
 #IMPORTANT NUMBER. Change this to change the final number of simulations
-n = 2000
+n = 20
 
 df_param <- PSA_params(n)
 
