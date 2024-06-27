@@ -10,6 +10,7 @@ library(ggpubr)
 library(dampack)
 library(grid)
 library(gridExtra)
+library(dplyr)
 
 source("finding_transition_probabilities_7state.R")
 source("finding_transition_probabilities_8state.R")
@@ -151,8 +152,8 @@ plot_function <- function(input_var){
     geom_line(aes(y = km_os_tdxd_sg_model, color = "T-DXd->SG (modeled)"), size = 1.2) +
     geom_line(aes(y = km_os_tdxd_chemo_model, color = "T-DXd->Chemo (modeled)"), size = 1.2) +
     geom_line(aes(y = km_os_chemo_tdxd_model, color = "Chemo->T-DXd (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo Only (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo Only (KM)"), linetype = "twodash", size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo-Chemo (modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo-Chemo (KM)"), linetype = "twodash", size = 1.2) +
     scale_y_continuous(breaks = seq(0, 100, by = 10), limits = c(0, 100), expand = c(0, 0)) +
     ylab("OS Probability (%)") +
     xlab("Months") +
@@ -552,6 +553,11 @@ source("PSA_8state.R")
 
 
 #PSA plot
+# Define the path to the CSV file
+csv_path <- "/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/Data_/Outputs/base_case_output.csv"
+df_psa_res <- read.csv(csv_path)
+
+# PSA plot function
 plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
   X <- split(df_psa_res, df_psa_res$group)
   means <- data.frame(
@@ -567,23 +573,23 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
   )
   
   # Define colors
-  colors <- c("Chemo Only" = "red", 
-              "Chemo->TDXd" = "deeppink",  
-              "TDXd->Chemo" = "green", 
-              "TDXd->SG" = "darkkhaki")
+  colors <- c("Chemo-Chemo" = "red", 
+              "Chemo-TDxd" = "deeppink",  
+              "TDxD-Chemo" = "green", 
+              "TDxD-SG" = "darkkhaki")
   
   # Define x and y axis limits
   x_limits <- c(130000, 400000)
   y_limits <- c(0, 1.3)
   
-  plot2 <- ggplot(df_psa_res[df_psa_res$group == "Chemo Only" | df_psa_res$group == "TDXd->Chemo", ], 
+  plot2 <- ggplot(df_psa_res[df_psa_res$group == "Chemo-Chemo" | df_psa_res$group == "TDxD-Chemo", ], 
                   aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
     geom_point() + 
-    geom_point(data = means[means$group == "Chemo Only" | means$group == "TDXd->Chemo", ],  
+    geom_point(data = means[means$group == "Chemo-Chemo" | means$group == "TDxD-Chemo", ],  
                mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
     scale_color_manual(values = colors) +  
     labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo Only vs. TDXd->Chemo"))) +
+    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-Chemo vs. TDxD-Chemo"))) +
     theme_bw(base_size = 14) +
     theme(
       text = element_text(family = "Arial", face = "bold"),
@@ -597,14 +603,14 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
     scale_x_continuous(limits = x_limits) +
     scale_y_continuous(limits = y_limits, breaks = c(0.3, 0.6, 0.9, 1.2))
   
-  plot3 <- ggplot(df_psa_res[df_psa_res$group == "Chemo->TDXd" | df_psa_res$group == "TDXd->Chemo", ], 
+  plot3 <- ggplot(df_psa_res[df_psa_res$group == "Chemo-TDxd" | df_psa_res$group == "TDxD-Chemo", ], 
                   aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
     geom_point() + 
-    geom_point(data = means[means$group == "Chemo->TDXd" | means$group == "TDXd->Chemo", ],  
+    geom_point(data = means[means$group == "Chemo-TDxd" | means$group == "TDxD-Chemo", ],  
                mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
     scale_color_manual(values = colors) +  
     labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo->TDXd vs. TDXd->Chemo"))) +
+    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-TDxd vs. TDxD-Chemo"))) +
     theme_bw(base_size = 14) +
     theme(
       text = element_text(family = "Arial", face = "bold"),
@@ -618,14 +624,14 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
     scale_x_continuous(limits = x_limits) +
     scale_y_continuous(limits = y_limits, breaks = c(0.3, 0.6, 0.9, 1.2))
   
-  plot4 <- ggplot(df_psa_res[df_psa_res$group == "TDXd->Chemo" | df_psa_res$group == "TDXd->SG", ], 
+  plot4 <- ggplot(df_psa_res[df_psa_res$group == "TDxD-Chemo" | df_psa_res$group == "TDxD-SG", ], 
                   aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
     geom_point() + 
-    geom_point(data = means[means$group == "TDXd->Chemo" | means$group == "TDXd->SG", ],  
+    geom_point(data = means[means$group == "TDxD-Chemo" | means$group == "TDxD-SG", ],  
                mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
     scale_color_manual(values = colors) +  
     labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for TDXd->Chemo vs. TDXd->SG"))) +
+    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for TDxD-Chemo vs. TDxD-SG"))) +
     theme_bw(base_size = 14) +
     theme(
       text = element_text(family = "Arial", face = "bold"),
@@ -648,8 +654,7 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
 }
 
 # Run the function
-plot_psa_scatter(res[[1]], "Chemo Only", "Chemo->TDXd", "TDXd->Chemo", "TDXd->SG")
-
+  plot_psa_scatter(df_psa_res, "Chemo-Chemo", "Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
 
 
 
