@@ -29,10 +29,10 @@ plot_function <- function(input_var){
   
   
   #The extracted Kaplan-Meier values
-  km_os_chemo_chemo <- c(1, 0.986, 0.981, 0.957, 0.94, 0.927, 0.884, 0.841, 0.793, 0.738, 0.712, 0.683, 0.669, 0.634)#, 0.610, 0.566, 0.520, 0.484, 0.459, 0.460, 0.457, 0.419, 0.375)
+  km_os_chemo_chemo <- c(1, 0.986, 0.981, 0.957, 0.94, 0.927, 0.884, 0.841, 0.793, 0.738, 0.712, 0.683, 0.669, 0.634, 0.610, 0.566, 0.520, 0.484, 0.459, 0.460, 0.457, 0.419, 0.375)
   km_pf_chemo_chemo <- c(1, 0.983, 0.756, 0.62, 0.603, 0.501, 0.439, 0.398, 0.34, 0.277, 0.268, 0.226, 0.217, 0.185) 
-  km_os_tdxd_chemo <- c(1, 0.992, 0.985, 0.967, 0.958, 0.939, 0.928, 0.899, 0.87, 0.857, 0.829, 0.815, 0.793, 0.774)#, 0.742, 0.731, 0.688, 0.661, 0.623, 0.586, 0.566, 0.539, 0.507, 0.500, 0.484)
-  km_pf_tdxd_chemo <- c(1, 0.988, 0.896, 0.82, 0.809, 0.765, 0.681, 0.633, 0.592, 0.554, 0.491, 0.457, 0.422, 0.386)#, 0.371, 0.363, 0.339, 0.31, 0.295, 0.274, 0.259) 
+  km_os_tdxd_chemo <- c(1, 0.992, 0.985, 0.967, 0.958, 0.939, 0.928, 0.899, 0.87, 0.857, 0.829, 0.815, 0.793, 0.774, 0.742, 0.731, 0.688, 0.661, 0.623, 0.586, 0.566, 0.539, 0.507, 0.500, 0.484)
+  km_pf_tdxd_chemo <- c(1, 0.988, 0.896, 0.82, 0.809, 0.765, 0.681, 0.633, 0.592, 0.554, 0.491, 0.457, 0.422, 0.386, 0.371, 0.363, 0.339, 0.31, 0.295, 0.274, 0.259) 
   
   #Vectors for storing the estimates of the KM curves
   km_os_chemo_chemo_model <- c()
@@ -148,23 +148,23 @@ plot_function <- function(input_var){
   df$km_os_tdxd_sg_model <- df$km_os_tdxd_sg_model * 100  
   
   plot1 <- ggplot(df, aes(x = idx)) + 
-    geom_line(aes(y = km_os_tdxd_chemo, color = "T-DXd->Chemo (KM)"), linetype = "twodash", size = 1.2) +
-    geom_line(aes(y = km_os_tdxd_sg_model, color = "T-DXd->SG (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_tdxd_chemo_model, color = "T-DXd->Chemo (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_tdxd_model, color = "Chemo->T-DXd (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo-Chemo (modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo-Chemo (KM)"), linetype = "twodash", size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_chemo, color = "T-DXd --> Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_sg_model, color = "T-DXd --> SG (Modeled)") , size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_chemo_model, color = "T-DXd --> Chemo (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_tdxd_model, color = "Chemo --> T-DXd (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo --> Chemo (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo --> Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
     scale_y_continuous(breaks = seq(0, 100, by = 10), limits = c(0, 100), expand = c(0, 0)) +
-    ylab("OS Probability (%)") +
+    ylab("Overall Survival Probability (%)") +
     xlab("Months") +
-    ggtitle("Modeled OS vs. Destiny-Breast04 Trial KM Estimates") +
+    ggtitle("Modeled Overall Survival for the Treatment Sequences") +
     scale_x_continuous(breaks = round(seq(0, 24, by = 3), 1), limits = c(0, 24), expand = c(0, 0)) +
     theme_classic(base_size = 12) + 
     theme(
       text = element_text(family = "Arial"),
       axis.text = element_text(size = 12, face = "bold"),
-      axis.title = element_text(size = 14, face = "bold"),
-      plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+      axis.title = element_text(size = 12, face = "bold"),
+      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
       panel.grid.major.y = element_blank(),
       panel.grid.minor.y = element_blank(),
       panel.grid.major.x = element_blank(),
@@ -175,20 +175,20 @@ plot_function <- function(input_var){
     ) +
     scale_color_manual(
       values = c(
-        "Chemo Only (modeled)" = "red",
-        "Chemo Only (KM)" = "blue",
-        "T-DXd->Chemo (modeled)" = "chocolate",
-        "T-DXd->Chemo (KM)" = "green",
-        "Chemo->T-DXd (modeled)" = "deeppink",
-        "T-DXd->SG (modeled)" = "darkkhaki"
+        "Chemo --> Chemo (Modeled)" = "red",
+        "Chemo --> Chemo (Kaplan-Meier)" = "blue",
+        "T-DXd --> Chemo (Modeled)" = "purple",
+        "T-DXd --> Chemo (Kaplan-Meier)" = "green",
+        "Chemo --> T-DXd (Modeled)" = "orange",
+        "T-DXd --> SG (Modeled)" = "brown"
       ),
       breaks = c(
-        "T-DXd->Chemo (KM)",
-        "T-DXd->SG (modeled)",
-        "T-DXd->Chemo (modeled)",
-        "Chemo->T-DXd (modeled)",
-        "Chemo Only (modeled)",
-        "Chemo Only (KM)"
+        "T-DXd --> Chemo (Kaplan-Meier)",
+        "T-DXd --> SG (Modeled)",
+        "T-DXd --> Chemo (Modeled)",
+        "Chemo --> T-DXd (Modeled)",
+        "Chemo --> Chemo (Modeled)",
+        "Chemo --> Chemo (Kaplan-Meier)"
       )
     )
   
@@ -363,7 +363,7 @@ plot_evolution <- function(df_plot, title){
       legend.text = element_text(family = "Arial"),  # Set legend font family
       legend.title = element_text(family = "Arial", face = "bold")  # Set legend title font family
     ) +
-    scale_x_continuous(breaks = seq(0, max(df_plot$cycle), by = 6)) +  # Adjust x-axis breaks
+    scale_x_continuous(breaks = seq(0, max(df_plot$cycle), by = 6), limits = c(0,90)) +  # Adjust x-axis breaks
     scale_color_manual(values = c("Dead" = "red", "Progressed_drug" = "gold", "Progressed_nodrug" = "green", "ProgressedAE"="cyan", "ProgressedILD"= "blue", "ProgressionFree"= "purple", "ProgressionFreeAE"= "magenta", "ProgressionFreeILD"="pink"),
                        labels = c("Dead", "Progressed after drug", "Progressed after no drug", "Progressed after AE", "Progressed after ILD", "Progression-Free", "Progression-Free after AE", "Progression-Free after ILD"),
                        name = "State")  # Update legend title
@@ -375,13 +375,13 @@ plot_evolution <- function(df_plot, title){
 dev.off()
 
 # Example calls to the function
-plot5 <- plot_evolution(df_plot_tdxd_chemo, "Evolution of patients with T-Dxd first and chemo second")
-plot6 <- plot_evolution(df_plot_chemo_chemo, "Evolution of patients with chemo first and second")
-plot7 <- plot_evolution(df_plot_chemo_tdxd, "Evolution of patients with chemo first and T-Dxd second")
-plot8 <- plot_evolution(df_plot_tdxd_sg, "Evolution of patients with T-Dxd first and SG second")
+plot5 <- plot_evolution(df_plot_tdxd_chemo, "Evolution of T-DXd --> Chemo Cohort")
+plot6 <- plot_evolution(df_plot_chemo_chemo, "Evolution of Chemo --> Chemo Cohort")
+plot7 <- plot_evolution(df_plot_chemo_tdxd, "Evolution of Chemo --> T-DXd Cohort")
+plot8 <- plot_evolution(df_plot_tdxd_sg, "Evolution of T-DXd --> SG Cohort")
 
 # Combine plots vertically
-combined_plots <- arrangeGrob(plot6, plot5, ncol = 1)
+combined_plots <- arrangeGrob(plot5, plot6, ncol = 1)
 print(combined_plots)
 grid.draw(combined_plots)
 
