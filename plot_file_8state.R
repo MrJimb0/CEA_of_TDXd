@@ -356,16 +356,16 @@ plot_evolution <- function(df_plot, title){
     xlab("Months") + ylab("Probability") + 
     theme_minimal() +
     theme(
-      plot.title = element_text(color="dodgerblue4", size=14, face="bold.italic", hjust = 0.5), # Center title
-      axis.title.x = element_text(color="darkolivegreen4", size=14, face="bold"),
-      axis.title.y = element_text(color="#993333", size=14, face="bold"),
+      plot.title = element_text(color="black", size=14, face="bold.italic", hjust = 0.5), # Center title
+      axis.title.x = element_text(color="black", size=14, face="bold"),
+      axis.title.y = element_text(color="black", size=14, face="bold"),
       axis.line = element_line(color = "black"),  # Set color of axis lines
       legend.text = element_text(family = "Arial"),  # Set legend font family
       legend.title = element_text(family = "Arial", face = "bold")  # Set legend title font family
     ) +
     scale_x_continuous(breaks = seq(0, max(df_plot$cycle), by = 6), limits = c(0,90)) +  # Adjust x-axis breaks
     scale_color_manual(values = c("Dead" = "red", "Progressed_drug" = "gold", "Progressed_nodrug" = "green", "ProgressedAE"="cyan", "ProgressedILD"= "blue", "ProgressionFree"= "purple", "ProgressionFreeAE"= "magenta", "ProgressionFreeILD"="pink"),
-                       labels = c("Dead", "Progressed after drug", "Progressed after no drug", "Progressed after AE", "Progressed after ILD", "Progression-Free", "Progression-Free after AE", "Progression-Free after ILD"),
+                       labels = c("Dead", "Progressed & candidate for other drug", "Progressed & no further drug", "Progressed after AE", "Progressed after ILD", "Progression-Free", "Progression-Free after AE", "Progression-Free after ILD"),
                        name = "State")  # Update legend title
   
   return(p)
@@ -507,30 +507,39 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
       df_results <- rbind(df_results,
                           data.frame(Willingness2Pay = c(icer_tdxd_chemo, icer_tdxd_chemo_chemo),
                                      Cost = rep(i, 2),
-                                     Comparison = c('TDXd-> Chemo vs. Chemo->TDXd', 'TDXd-> Chemo vs. Chemo Only')))
+                                     Comparison = c('T-DXd --> chemo vs chemo --> T-DXd', 'T-DXd --> chemo vs. chemo --> chemo')))
       
   }
   
   # Plotting the results
-  library(ggplot2)
+  dot_df <- data.frame(
+    Willingness2Pay = 150000,
+    Cost = c(7700, 11320),  # adjust these values to match the y-values of the lines
+    Comparison = c("Comparison 1", "Comparison 2"))
   
   ggplot(data = df_results, aes(x = Willingness2Pay, y = Cost, color = Comparison, group = Comparison)) +
-    geom_line() +
-    geom_point() +
-    labs(x = "ICER", y = "T-DXd Cost ($)", color = "Treatment Strategies Comparisons") +
-    scale_x_continuous(limits = c(0, 300000), breaks = seq(0, 300000, 50000)) +
-    scale_y_continuous(limits = c(5000, 12500), breaks = seq(5000, 12500, 2500)) +
+    geom_line(aes(linetype = Comparison, show.legend = FALSE)) +
+    geom_point(aes(shape = Comparison), size = 3, show.legend = FALSE) +  # fixed size to 3
+    geom_hline(yintercept = 14113.690, linetype = "dashed", color = "black") + 
+    geom_point(data = dot_df, aes(x = Willingness2Pay, y = Cost), shape = 23, fill = "green", size = 5, show.legend = FALSE) + 
+    scale_color_manual(values = c("black", "black", "blue", "red")) + 
+    scale_linetype_manual(values = c("solid", "dashed", "dotdash", "longdash")) + 
+    scale_shape_manual(values = c(16, 17, 18, 19)) + 
+    labs(x = "Incremental Cost-Effectiveness Ratio (ICER)", y = "T-DXd Monthly Cost ($)", color = "Compared Strategies", linetype = "Compared Strategies", shape = "Compared Strategies") +
+    scale_x_continuous(limits = c(0, 300000), breaks = seq(0, 500000, 30000)) +
+    scale_y_continuous(limits = c(5000, 15000), breaks = seq(5000, 15000, 2500)) +
     theme_minimal() +
     theme(axis.line = element_line(size = 1, color = "black"),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
-          legend.position = c(0.15, 0.85),
-          legend.background = element_rect(fill = "transparent"),
-          legend.box.margin = margin(5, 5, 5, 5),
-          legend.title = element_text(family = "Arial", face = "bold"),
-          legend.text = element_text(family = "Arial", face = "bold"),
-          axis.text = element_text(family = "Arial", face = "bold"),
-          axis.title = element_text(family = "Arial", face = "bold"))
+          legend.position = "none",
+          #legend.position = c(0.85, 0.15),
+          #legend.background = element_rect(fill = "transparent"),
+          #legend.box.margin = margin(5, 5, 5, 5),
+          #legend.title = element_text(family = "Arial", face = "bold"),
+          #legend.text = element_text(family = "Arial"),
+          axis.text = element_text(family = "Arial"),
+          axis.title = element_text(family = "Arial"))
 }
 
 #NEEDS WORK
@@ -589,7 +598,7 @@ plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, 
                mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
     scale_color_manual(values = colors) +  
     labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-Chemo vs. TDxD-Chemo"))) +
+    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-Chemo vs TDxD-Chemo"))) +
     theme_bw(base_size = 14) +
     theme(
       text = element_text(family = "Arial", face = "bold"),
