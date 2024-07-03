@@ -148,12 +148,12 @@ plot_function <- function(input_var){
   df$km_os_tdxd_sg_model <- df$km_os_tdxd_sg_model * 100  
   
   plot1 <- ggplot(df, aes(x = idx)) + 
-    geom_line(aes(y = km_os_tdxd_chemo, color = "T-DXd --> Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
-    geom_line(aes(y = km_os_tdxd_sg_model, color = "T-DXd --> SG (Modeled)") , size = 1.2) +
-    geom_line(aes(y = km_os_tdxd_chemo_model, color = "T-DXd --> Chemo (Modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_tdxd_model, color = "Chemo --> T-DXd (Modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo --> Chemo (Modeled)"), size = 1.2) +
-    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo --> Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_chemo, color = "T-DXd → Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_sg_model, color = "T-DXd → SG (Modeled)") , size = 1.2) +
+    geom_line(aes(y = km_os_tdxd_chemo_model, color = "T-DXd → Chemo (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_tdxd_model, color = "Chemo → T-DXd (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo_model, color = "Chemo → Chemo (Modeled)"), size = 1.2) +
+    geom_line(aes(y = km_os_chemo_chemo, color = "Chemo → Chemo (Kaplan-Meier)"), linetype = "twodash", size = 1.2) +
     scale_y_continuous(breaks = seq(0, 100, by = 10), limits = c(0, 100), expand = c(0, 0)) +
     ylab("Overall Survival Probability (%)") +
     xlab("Months") +
@@ -175,20 +175,20 @@ plot_function <- function(input_var){
     ) +
     scale_color_manual(
       values = c(
-        "Chemo --> Chemo (Modeled)" = "red",
-        "Chemo --> Chemo (Kaplan-Meier)" = "blue",
-        "T-DXd --> Chemo (Modeled)" = "purple",
-        "T-DXd --> Chemo (Kaplan-Meier)" = "green",
-        "Chemo --> T-DXd (Modeled)" = "orange",
-        "T-DXd --> SG (Modeled)" = "brown"
+        "Chemo → Chemo (Modeled)" = "red",
+        "Chemo → Chemo (Kaplan-Meier)" = "purple",
+        "T-DXd → Chemo (Modeled)" = "blue",
+        "T-DXd → Chemo (Kaplan-Meier)" = "green",
+        "Chemo → T-DXd (Modeled)" = "orange",
+        "T-DXd → SG (Modeled)" = "brown"
       ),
       breaks = c(
-        "T-DXd --> Chemo (Kaplan-Meier)",
-        "T-DXd --> SG (Modeled)",
-        "T-DXd --> Chemo (Modeled)",
-        "Chemo --> T-DXd (Modeled)",
-        "Chemo --> Chemo (Modeled)",
-        "Chemo --> Chemo (Kaplan-Meier)"
+        "T-DXd → Chemo (Kaplan-Meier)",
+        "T-DXd → SG (Modeled)",
+        "T-DXd → Chemo (Modeled)",
+        "Chemo → T-DXd (Modeled)",
+        "Chemo → Chemo (Modeled)",
+        "Chemo → Chemo (Kaplan-Meier)"
       )
     )
   
@@ -375,10 +375,10 @@ plot_evolution <- function(df_plot, title){
 dev.off()
 
 # Example calls to the function
-plot5 <- plot_evolution(df_plot_tdxd_chemo, "Evolution of T-DXd --> Chemo Cohort")
-plot6 <- plot_evolution(df_plot_chemo_chemo, "Evolution of Chemo --> Chemo Cohort")
-plot7 <- plot_evolution(df_plot_chemo_tdxd, "Evolution of Chemo --> T-DXd Cohort")
-plot8 <- plot_evolution(df_plot_tdxd_sg, "Evolution of T-DXd --> SG Cohort")
+plot5 <- plot_evolution(df_plot_tdxd_chemo, "Evolution of T-DXd → Chemo Cohort")
+plot6 <- plot_evolution(df_plot_chemo_chemo, "Evolution of Chemo → Chemo Cohort")
+plot7 <- plot_evolution(df_plot_chemo_tdxd, "Evolution of Chemo → T-DXd Cohort")
+plot8 <- plot_evolution(df_plot_tdxd_sg, "Evolution of T-DXd → SG Cohort")
 
 # Combine plots vertically
 combined_plots <- arrangeGrob(plot5, plot6, ncol = 1)
@@ -507,7 +507,7 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
       df_results <- rbind(df_results,
                           data.frame(Willingness2Pay = c(icer_tdxd_chemo, icer_tdxd_chemo_chemo),
                                      Cost = rep(i, 2),
-                                     Comparison = c('T-DXd --> chemo vs chemo --> T-DXd', 'T-DXd --> chemo vs. chemo --> chemo')))
+                                     Comparison = c('T-DXd → chemo vs chemo → T-DXd', 'T-DXd → chemo vs. chemo → chemo')))
       
   }
   
@@ -518,9 +518,13 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
     Comparison = c("Comparison 1", "Comparison 2"))
   
   ggplot(data = df_results, aes(x = Willingness2Pay, y = Cost, color = Comparison, group = Comparison)) +
+    annotate("text", x = 50000, y = 14300.690, label = "T-DXd Actual Monthly Cost", family = "Arial", size = 3) +
+    annotate("text", x = 175000, y = 11320, label = "***% Cost Reduction", family = "Arial", size = 3) +
+    annotate("text", x = 175000, y = 7700, label = "***% Cost Reduction2", family = "Arial", size = 3) +
     geom_line(aes(linetype = Comparison, show.legend = FALSE)) +
     geom_point(aes(shape = Comparison), size = 3, show.legend = FALSE) +  # fixed size to 3
     geom_hline(yintercept = 14113.690, linetype = "dashed", color = "black") + 
+    geom_vline(xintercept = 150000, linetype = "dotted", color = "black") + 
     geom_point(data = dot_df, aes(x = Willingness2Pay, y = Cost), shape = 23, fill = "green", size = 5, show.legend = FALSE) + 
     scale_color_manual(values = c("black", "black", "blue", "red")) + 
     scale_linetype_manual(values = c("solid", "dashed", "dotdash", "longdash")) + 
@@ -529,26 +533,121 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
     scale_x_continuous(limits = c(0, 300000), breaks = seq(0, 500000, 30000)) +
     scale_y_continuous(limits = c(5000, 15000), breaks = seq(5000, 15000, 2500)) +
     theme_minimal() +
+    ggtitle("One-way Sensitivity Analysis of Bundled T-DXd Monthly Price") +
     theme(axis.line = element_line(size = 1, color = "black"),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           legend.position = "none",
-          #legend.position = c(0.85, 0.15),
-          #legend.background = element_rect(fill = "transparent"),
-          #legend.box.margin = margin(5, 5, 5, 5),
-          #legend.title = element_text(family = "Arial", face = "bold"),
-          #legend.text = element_text(family = "Arial"),
           axis.text = element_text(family = "Arial"),
-          axis.title = element_text(family = "Arial"))
+          axis.title = element_text(family = "Arial"),
+          plot.title = element_text(hjust = 0.5, size = 18, face = "bold", family = "Arial"))
 }
 
-#NEEDS WORK
-# Example usage:
+#Appendix Plot
 df_one_way = list(df_tdxd_chemo, df_chemo_tdxd, df_tdxd_sg)
 one_way_sensitivity_tdxd_price(df_one_way, dr_v = df_list_tdxd_chemo[[3]])
 
 
+#PSA plot
+csv_path <- "/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/Data_/Outputs/base_case_output.csv"
+df_psa_res <- read.csv(csv_path)
 
+# PSA plot function
+plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
+  # Define colors
+  colors <- c("Chemo-Chemo" = "red", 
+              "Chemo-TDxd" = "green",  
+              "TDxD-Chemo" = "blue", 
+              "TDxD-SG" = "orange")
+  
+  # Define x and y axis limits
+  x_limits <- c(100000, 450000)
+  y_limits <- c(0, 1.3)
+  
+  t_v_c <- ggplot(
+    df_psa_res %>% 
+      filter(group %in% c("Chemo-Chemo", "TDxD-Chemo")),
+    aes(x = DiscountedCost, y = DiscountedQALY, color = group)
+  ) + 
+    geom_point() + 
+    scale_color_manual(values = colors) + 
+    labs(
+      x = "Discounted Cost ($)",
+      y = "Discounted QALY"
+    ) + 
+    ggtitle("T-DXd → chemo vs chemo → chemo") + 
+    theme_minimal() + 
+    theme(
+      text = element_text(family = "Arial"),
+      panel.grid = element_blank(),
+      axis.line = element_line(),
+      axis.text = element_text(size = 12, family = "Arial"),
+      axis.title = element_text(size = 12, family = "Arial"),
+      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
+      legend.position = "none"
+    ) + 
+    scale_x_continuous(limits = x_limits, breaks = seq(0, 400000, by = 50000)) + 
+    scale_y_continuous(limits = y_limits, breaks = seq(0.3, 1.2, by = 0.3))
+  
+  sequence <- ggplot(
+    df_psa_res %>% 
+      filter(group %in% c("Chemo-TDxd", "TDxD-Chemo")),
+    aes(x = DiscountedCost, y = DiscountedQALY, color = group)
+  ) + 
+    geom_point() + 
+    scale_color_manual(values = colors) + 
+    labs(
+      x = "Discounted Cost ($)",
+      y = "Discounted QALY"
+    ) + 
+    ggtitle("T-DXd → chemo vs chemo → T-DXd") + 
+    theme_minimal() + 
+    theme(
+      text = element_text(family = "Arial"),
+      panel.grid = element_blank(),
+      axis.line = element_line(),
+      axis.text = element_text(size = 12, family = "Arial"),
+      axis.title = element_text(size = 12, family = "Arial"),
+      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
+      legend.position = "none"
+    ) + 
+    scale_x_continuous(limits = x_limits, breaks = seq(0, 400000, by = 50000)) + 
+    scale_y_continuous(limits = y_limits, breaks = seq(0.3, 1.2, by = 0.3))
+  
+  SG <- ggplot(
+    df_psa_res %>% 
+      filter(group %in% c("TDxD-SG", "TDxD-Chemo")),
+    aes(x = DiscountedCost, y = DiscountedQALY, color = group)
+  ) + 
+    geom_point() + 
+    scale_color_manual(values = colors) + 
+    labs(
+      x = "Discounted Cost ($)",
+      y = "Discounted QALY"
+    ) + 
+    ggtitle("T-DXd → chemo vs T-DXd → SG") + 
+    theme_minimal() + 
+    theme(
+      text = element_text(family = "Arial"),
+      panel.grid = element_blank(),
+      axis.line = element_line(),
+      axis.text = element_text(size = 12, family = "Arial"),
+      axis.title = element_text(size = 12, family = "Arial"),
+      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
+      legend.position = "none"
+    ) + 
+    scale_x_continuous(limits = x_limits, breaks = seq(0, 400000, by = 50000)) + 
+    scale_y_continuous(limits = y_limits, breaks = seq(0.3, 1.2, by = 0.3))
+
+  grid.arrange(top = textGrob("Probabilistic Sensitivity Analyses", gp = gpar(fontsize = 18, fontface = "bold")),
+               t_v_c, sequence, SG, 
+               nrow = 2, ncol = 2, 
+               heights = c(1, 1), widths = c(1, 1), 
+               layout_matrix = rbind(c(1, 2), c(3, NA)))
+}
+
+# Run the function
+plot_psa_scatter(df_psa_res, "Chemo-Chemo", "Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
 
 
 
@@ -559,121 +658,6 @@ one_way_sensitivity_tdxd_price(df_one_way, dr_v = df_list_tdxd_chemo[[3]])
 
 
 source("PSA_8state.R")
-
-
-#PSA plot
-# Define the path to the CSV file
-csv_path <- "/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/Data_/Outputs/base_case_output.csv"
-df_psa_res <- read.csv(csv_path)
-
-# PSA plot function
-plot_psa_scatter <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
-  X <- split(df_psa_res, df_psa_res$group)
-  means <- data.frame(
-    mean_cost = c(mean(X[[group_name1]]["DiscountedCost"][[1]]), 
-                  mean(X[[group_name2]]["DiscountedCost"][[1]]), 
-                  mean(X[[group_name3]]["DiscountedCost"][[1]]), 
-                  mean(X[[group_name4]]["DiscountedCost"][[1]])),
-    mean_qaly = c(mean(X[[group_name1]]["DiscountedQALY"][[1]]), 
-                  mean(X[[group_name2]]["DiscountedQALY"][[1]]), 
-                  mean(X[[group_name3]]["DiscountedQALY"][[1]]), 
-                  mean(X[[group_name4]]["DiscountedQALY"][[1]])),
-    group = c(group_name1, group_name2, group_name3, group_name4)
-  )
-  
-  # Define colors
-  colors <- c("Chemo-Chemo" = "red", 
-              "Chemo-TDxd" = "deeppink",  
-              "TDxD-Chemo" = "green", 
-              "TDxD-SG" = "darkkhaki")
-  
-  # Define x and y axis limits
-  x_limits <- c(130000, 400000)
-  y_limits <- c(0, 1.3)
-  
-  plot2 <- ggplot(df_psa_res[df_psa_res$group == "Chemo-Chemo" | df_psa_res$group == "TDxD-Chemo", ], 
-                  aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
-    geom_point() + 
-    geom_point(data = means[means$group == "Chemo-Chemo" | means$group == "TDxD-Chemo", ],  
-               mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
-    scale_color_manual(values = colors) +  
-    labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-Chemo vs TDxD-Chemo"))) +
-    theme_bw(base_size = 14) +
-    theme(
-      text = element_text(family = "Arial", face = "bold"),
-      panel.grid = element_blank(),
-      axis.line = element_line(),
-      axis.text = element_text(size = 12, family = "Arial", face = "bold"),
-      axis.title = element_text(size = 14, family = "Arial", face = "bold"),
-      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
-      legend.position = "none"
-    ) +
-    scale_x_continuous(limits = x_limits) +
-    scale_y_continuous(limits = y_limits, breaks = c(0.3, 0.6, 0.9, 1.2))
-  
-  plot3 <- ggplot(df_psa_res[df_psa_res$group == "Chemo-TDxd" | df_psa_res$group == "TDxD-Chemo", ], 
-                  aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
-    geom_point() + 
-    geom_point(data = means[means$group == "Chemo-TDxd" | means$group == "TDxD-Chemo", ],  
-               mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
-    scale_color_manual(values = colors) +  
-    labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for Chemo-TDxd vs. TDxD-Chemo"))) +
-    theme_bw(base_size = 14) +
-    theme(
-      text = element_text(family = "Arial", face = "bold"),
-      panel.grid = element_blank(),
-      axis.line = element_line(),
-      axis.text = element_text(size = 12, family = "Arial", face = "bold"),
-      axis.title = element_text(size = 14, family = "Arial", face = "bold"),
-      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
-      legend.position = "none"
-    ) +
-    scale_x_continuous(limits = x_limits) +
-    scale_y_continuous(limits = y_limits, breaks = c(0.3, 0.6, 0.9, 1.2))
-  
-  plot4 <- ggplot(df_psa_res[df_psa_res$group == "TDxD-Chemo" | df_psa_res$group == "TDxD-SG", ], 
-                  aes(x = DiscountedCost, y = DiscountedQALY, col = group)) + 
-    geom_point() + 
-    geom_point(data = means[means$group == "TDxD-Chemo" | means$group == "TDxD-SG", ],  
-               mapping = aes(x = mean_cost, y = mean_qaly), size = 3, col = "black") +
-    scale_color_manual(values = colors) +  
-    labs(x = bquote(bold("Discounted Cost ($)")), y = bquote(bold("Discounted QALY"))) +
-    ggtitle(bquote(bold("Probabilistic Sensitivity Analysis for TDxD-Chemo vs. TDxD-SG"))) +
-    theme_bw(base_size = 14) +
-    theme(
-      text = element_text(family = "Arial", face = "bold"),
-      panel.grid = element_blank(),
-      axis.line = element_line(),
-      axis.text = element_text(size = 12, family = "Arial", face = "bold"),
-      axis.title = element_text(size = 14, family = "Arial", face = "bold"),
-      plot.title = element_text(size = 12, family = "Arial", face = "bold", hjust = 0.5),
-      legend.position = "none"
-    ) +
-    scale_x_continuous(limits = x_limits) +
-    scale_y_continuous(limits = y_limits, breaks = c(0.3, 0.6, 0.9, 1.2))
-  
-  # Remove unknown black dots if they represent the mean of all points
-  plot2$layers <- plot2$layers[-c(2)]
-  plot3$layers <- plot3$layers[-c(2)]
-  plot4$layers <- plot4$layers[-c(2)]
-  
-  grid.arrange(plot2, plot3, plot4, nrow = 2, ncol = 2, heights = c(1, 1), widths = c(1, 1), layout_matrix = rbind(c(1, 2), c(3, NA)))
-}
-
-# Run the function
-  plot_psa_scatter(df_psa_res, "Chemo-Chemo", "Chemo-TDxd", "TDxD-Chemo", "TDxD-SG")
-
-
-
-
-
-
-
-
-
-
 #CEAC plot
 plot_ceac_curve <- function(df_psa_res, group_name1, group_name2, group_name3, group_name4){
   X<-split(df_psa_res, df_psa_res$group)
