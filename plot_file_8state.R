@@ -178,7 +178,7 @@ plot_function <- function(input_var){
         "Chemo → Chemo (Modeled)" = "red",
         "Chemo → Chemo (Kaplan-Meier)" = "purple",
         "T-DXd → Chemo (Modeled)" = "blue",
-        "T-DXd → Chemo (Kaplan-Meier)" = "green",
+        "T-DXd → Chemo (Kaplan-Meier)" = "grey",
         "Chemo → T-DXd (Modeled)" = "orange",
         "T-DXd → SG (Modeled)" = "brown"
       ),
@@ -203,7 +203,7 @@ plot_function <- function(input_var){
     geom_line(aes(y = km_pf_chemo_chemo_model[1:m]), color = "red") + 
     geom_line(aes(y = km_pf_chemo_chemo[1:m]), color = "blue", linetype = "twodash") +
     geom_line(aes(y = km_pf_tdxd_chemo_model[1:m]), color = "chocolate") + 
-    geom_line(aes(y = km_pf_tdxd_chemo[1:m]), color = "green", linetype = "twodash") +
+    geom_line(aes(y = km_pf_tdxd_chemo[1:m]), color = "grey", linetype = "twodash") +
     geom_line(aes(y = km_pf_chemo_tdxd_model[1:m]), color = "deeppink") + 
     geom_line(aes(y = km_pf_tdxd_sg_model[1:m]), color = "darkkhaki") + 
     ylim(0, 1) +
