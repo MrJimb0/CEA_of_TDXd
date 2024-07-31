@@ -26,7 +26,8 @@ txtsize <- 14
 gg_scattter <- plot(l_psa, txtsize = txtsize) +
   ggthemes::scale_color_colorblind() +
   ggthemes::scale_fill_colorblind() +
-  scale_y_continuous("Cost (Thousand $)",
+  scale_y_continuous("Cost (Thousand $)", 
+                     n.breaks = 6,
                      labels = function(x) x/1000) +
   xlab("Effectiveness (QALYs)") +
   guides(col = guide_legend(nrow = 2)) +
@@ -53,7 +54,7 @@ summary(ceac_obj)
 gg_ceac <- plot(ceac_obj, txtsize = txtsize, xlim = c(0, NA), n_x_ticks = 14) +
   ggthemes::scale_color_colorblind() +
   ggthemes::scale_fill_colorblind() +
-  theme(legend.position = c(0.8, 0.48))
+  theme(legend.position = c(0.2, 0.48))
 gg_ceac
 
 ### Expected Loss Curves (ELCs) ----
@@ -89,3 +90,35 @@ patched_cea <- (gg_scattter +  gg_ceac + plot_layout(guides = "keep"))/(gg_elc +
 gg_psa_plots <- patched_cea + 
   plot_annotation(tag_levels = 'A')
 gg_psa_plots
+
+# Pairwise comparisons ----
+## Chemo-Chemo vs Chemo-TDxD ----
+l_psa_chemochemo_chemotdxd <- dampack::make_psa_obj(cost          = df_costs[, c(1, 2)],
+                                                    effectiveness = df_qalys[, c(1, 2)],
+                                                    strategies    = v_names_str[c(1, 2)])
+### Incremental cost-effectiveness ratios (ICERs) with probabilistic output ----
+#* Compute expected costs and effects for each strategy from the PSA
+df_out_ce_psa_chemochemo_chemotdxd <- summary(l_psa_chemochemo_chemotdxd)
+df_cea_psa_chemochemo_chemotdxd <- dampack::calculate_icers(cost       = df_out_ce_psa_chemochemo_chemotdxd$meanCost, 
+                                       effect     = df_out_ce_psa_chemochemo_chemotdxd$meanEffect,
+                                       strategies = df_out_ce_psa_chemochemo_chemotdxd$Strategy)
+df_cea_psa_chemochemo_chemotdxd
+### Plot cost-effectiveness frontier with probabilistic output ----
+plot(df_cea_psa_chemochemo_chemotdxd, label = "all", txtsize = txtsize) +
+  theme(legend.position = c(0.8, 0.2))
+
+### Cost-effectiveness acceptability curves (CEACs) and frontier (CEAF) ---
+ceac_obj_chemochemo_chemotdxd <- dampack::ceac(wtp = v_wtp, psa = l_psa_chemochemo_chemotdxd)
+#* Regions of highest probability of cost-effectiveness for each strategy
+summary(ceac_obj_chemochemo_chemotdxd)
+#* CEAC & CEAF plot
+gg_ceac_chemochemo_chemotdxd <- plot(ceac_obj_chemochemo_chemotdxd, txtsize = txtsize, xlim = c(0, NA), n_x_ticks = 14) +
+  ggthemes::scale_color_colorblind() +
+  ggthemes::scale_fill_colorblind() +
+  theme(legend.position = c(0.8, 0.48))
+gg_ceac_chemochemo_chemotdxd
+
+## Chemo-Chemo vs TDxd-Chemo ----
+l_psa_chemotdxd_chemochemo <- dampack::make_psa_obj(cost          = df_costs[, c(1, 3)],
+                                                    effectiveness = df_qalys[, c(1, 3)],
+                                                    strategies    = v_names_str[c(1, 3)])
