@@ -517,23 +517,23 @@ one_way_sensitivity_tdxd_price <- function(df, dr_v){
     Cost = c(7700, 11320),  # adjust these values to match the y-values of the lines
     Comparison = c("Comparison 1", "Comparison 2"))
   
-  ggplot(data = df_results, aes(x = Willingness2Pay, y = Cost, color = Comparison, group = Comparison)) +
-    annotate("text", x = 50000, y = 14300.690, label = "T-DXd Actual Monthly Cost", family = "Arial", size = 3) +
-    annotate("text", x = 175000, y = 11320, label = "***% Cost Reduction", family = "Arial", size = 3) +
-    annotate("text", x = 175000, y = 7700, label = "***% Cost Reduction2", family = "Arial", size = 3) +
+  ggplot(data = df_results, aes(x = Cost, y = Willingness2Pay, color = Comparison, group = Comparison)) +
+    annotate("text", y = 50000, x = 14300.690-522.43, label = "T-DXd Actual Monthly Cost", family = "Arial", size = 3) +
+    annotate("text", y = 175000, x = cost2, label = paste0(round(p_reduction2*100, 0), "% Cost Reduction"), family = "Arial", size = 3, vjust = 0.5) +
+    annotate("text", y = 175000, x = cost1, label = paste0(round(p_reduction1*100, 0), "% Cost Reduction2"), family = "Arial", size = 3, vjust = 0.5) +
     geom_line(aes(linetype = Comparison, show.legend = FALSE)) +
     geom_point(aes(shape = Comparison), size = 3, show.legend = FALSE) +  # fixed size to 3
-    geom_hline(yintercept = 14113.690, linetype = "dashed", color = "black") + 
-    geom_vline(xintercept = 150000, linetype = "dotted", color = "black") + 
-    geom_point(data = dot_df, aes(x = Willingness2Pay, y = Cost), shape = 23, fill = "green", size = 5, show.legend = FALSE) + 
+    geom_vline(xintercept = 14113.690, linetype = "dashed", color = "black") + 
+    geom_hline(yintercept = 150000, linetype = "dotted", color = "black") + 
+    geom_point(data = dot_df, aes(x = Cost, y = Willingness2Pay), shape = 23, fill = "green", size = 5, show.legend = FALSE) + 
     scale_color_manual(values = c("black", "black", "blue", "red")) + 
     scale_linetype_manual(values = c("solid", "dashed", "dotdash", "longdash")) + 
     scale_shape_manual(values = c(16, 17, 18, 19)) + 
-    labs(x = "Incremental Cost-Effectiveness Ratio (ICER)", y = "T-DXd Monthly Cost ($)", color = "Compared Strategies", linetype = "Compared Strategies", shape = "Compared Strategies") +
-    scale_x_continuous(limits = c(0, 300000), breaks = seq(0, 500000, 30000)) +
-    scale_y_continuous(limits = c(5000, 15000), breaks = seq(5000, 15000, 2500)) +
+    labs(x = "T-DXd Monthly Dose Cost ($)", y = "Cost-Effectiveness ($)", color = "Compared Strategies", linetype = "Compared Strategies", shape = "Compared Strategies") +
+    scale_y_continuous(limits = c(0, 300000), breaks = seq(0, 500000, 30000)) +
+    scale_x_continuous(limits = c(5000, 15000), breaks = seq(5000, 15000, 2500)) +
     theme_minimal() +
-    ggtitle("One-way Sensitivity Analysis of Bundled T-DXd Monthly Price") +
+    ggtitle("One-way Sensitivity Analysis of Dose T-DXd Monthly Price") +
     theme(axis.line = element_line(size = 1, color = "black"),
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
