@@ -2,11 +2,11 @@
 #Oversight from Jeremy Goldhaber-Feibert, PhD and Fernando Alarid-Escudero, Ph.D.
 
 options(scipen=999)
-setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
+# setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
 
 library(expm)
 library(ggplot2)
-library(ggpubr)
+# library(ggpubr)
 
 
 #Notation used in this file:
@@ -605,8 +605,8 @@ plot_function <- function(tm_tdxd_chemo){
   plot(0:(length(ae_test_tdxd)-1), ae_test_tdxd, type = "l")
   plot(0:(length(ae_test_tdxd)-1), ae_test_ild, type = "l")
   
-  ggarrange(plot2, plot4,
-            ncol = 1, nrow = 2, common.legend = TRUE,legend="bottom") 
+  # ggarrange(plot2, plot4,
+  #           ncol = 1, nrow = 2, common.legend = TRUE,legend="bottom") 
   
 }
 

@@ -2,7 +2,7 @@
 #Oversight from Jeremy Goldhaber-Feibert, PhD and Fernando Alarid-Escudero, Ph.D.
 
 options(scipen=999)
-setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
+# setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
 
 #Plot file
 library(ggplot2)
@@ -20,6 +20,11 @@ A_tdxd_chemo <- tm_tdxd_chemo
 A_chemo_chemo <- tm_chemo_chemo
 A_chemo_tdxd <- tm_chemo_tdxd
 A_tdxd_sg <- tm_tdxd_sg
+
+# input_var <- list(A_tdxd_chemo,
+#                   A_chemo_chemo,
+#                   A_chemo_tdxd,
+#                   A_tdxd_sg)
 
 plot_function <- function(input_var){
   A_tdxd_chemo <- input_var[[1]]
@@ -78,7 +83,7 @@ plot_function <- function(input_var){
   #ae_test_ild <- c(0)
   
   
-  for(t in 1:n){
+  for(t in 1:n){ # t <- 1
     
     s1_chemo_chemo <- s0_chemo_chemo %*% A_chemo_chemo[[t]]
     s1_tdxd_chemo <- s0_tdxd_chemo %*% A_tdxd_chemo[[t]]
@@ -197,7 +202,54 @@ plot_function <- function(input_var){
   
   print(plot1)
   
+  df_plot1 <- rbind(data.frame(Source = "Modeled",
+                               Strategy = "Chemo → Chemo", 
+                               Time = 0:25,
+                               Survival = km_os_chemo_chemo_model),
+                    data.frame(Source = "Observed (Kaplan-Meier)",
+                               Strategy = "Chemo → Chemo", 
+                               Time = 0:22,
+                               Survival = km_os_chemo_chemo),
+                    data.frame(Source = "Modeled",
+                               Strategy = "Chemo → T-DXd", 
+                               Time = 0:25,
+                               Survival = km_os_chemo_tdxd_model),
+                    data.frame(Source = "Modeled",
+                               Strategy = "T-DXd → Chemo", 
+                               Time = 0:25,
+                               Survival = km_os_tdxd_chemo_model),                    
+                    data.frame(Source = "Observed (Kaplan-Meier)", 
+                               Strategy = "T-DXd → Chemo", 
+                               Time = 0:24,
+                               Survival = km_os_tdxd_chemo),
+                    data.frame(Source = "Modeled",
+                               Strategy = "T-DXd → SG", 
+                               Time = 0:25,
+                               Survival = km_os_tdxd_sg_model))
   
+  plot1_alt <- ggplot(df_plot1, aes(x = Time, y = Survival, color = Strategy, linetype = Source)) +
+    geom_line(size = 1.2) +
+    ggthemes::scale_color_colorblind() +
+    scale_y_continuous(breaks = seq(0, 1, by = 0.1), limits = c(0, 1), expand = c(0, 0)) +
+    ylab("Overall Survival Probability") +
+    xlab("Months") +
+    ggtitle("Modeled Overall Survival for the Treatment Sequences") +
+    scale_x_continuous(breaks = round(seq(0, 24, by = 3), 1), limits = c(0, 24), expand = c(0, 0)) +
+    theme_classic(base_size = 16) + 
+    theme(
+      text = element_text(family = "Arial"),
+      axis.text = element_text(size = 12, face = "bold"),
+      axis.title = element_text(size = 12, face = "bold"),
+      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      legend.position = "right",  # Place legend at the bottom of the plot
+      legend.text = element_text(family = "Arial", size = 12),  # Set legend text font and size
+      legend.title = element_text(family = "Arial", size = 14, face = "bold")  # Set legend title font and size
+    )
+  plot1_alt
   
   plot2 <- ggplot(df, aes(x = idx)) + 
     geom_line(aes(y = km_pf_chemo_chemo_model[1:m]), color = "red") + 
@@ -226,7 +278,6 @@ opt_var <- list(A_tdxd_chemo,
                 A_chemo_chemo,
                 A_chemo_tdxd,
                 A_tdxd_sg)
-
 plot_function(opt_var)
 
 

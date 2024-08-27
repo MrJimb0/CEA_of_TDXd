@@ -2,7 +2,7 @@
 #Oversight from Jeremy Goldhaber-Feibert, PhD and Fernando Alarid-Escudero, Ph.D.
 
 options(scipen=999)
-setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
+# setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerson_Lab_Github/CEA_of_TDXd/")
 
 #The target variables in line 161 are the values we are calibrating to. Change this if you want to change the calibration
 #The sd corresponding to the targets is found at line 296
@@ -17,7 +17,7 @@ setwd("/Users/jamesdickerson/Library/CloudStorage/Box-Box/Dickerson Lab/Dickerso
 
 library(expm)
 library(ggplot2)
-library(ggpubr)
+# library(ggpubr)
 
 
 
@@ -492,8 +492,8 @@ plot_function <- function(input_var){
   plot(0:(length(ae_test_chemo)-1), ae_test_tdxd, type = "l")
   plot(0:(length(ae_test_chemo)-1), ae_test_ild, type = "l")
   
-  ggarrange(plot1, plot2, plot3, plot4,
-            ncol = 2, nrow = 2, common.legend = TRUE,legend="bottom") 
+  # ggarrange(plot1, plot2, plot3, plot4,
+  #           ncol = 2, nrow = 2, common.legend = TRUE,legend="bottom") 
   
 }
 

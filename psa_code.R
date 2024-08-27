@@ -4,7 +4,12 @@ library(patchwork)  # For combining ggplot2 figures
 df_psa_lng <- read.csv("data/base_case_output.csv")
 # Transform long to wide the dataset with group as columns
 df_psa <- reshape(df_psa_lng[, -1], idvar = "sim", timevar = "group", direction = "wide")
-v_names_str <- df_psa_lng[1:4, "group"]
+# v_names_str <- df_psa_lng[1:4, "group"]
+v_names_str <- c("Chemo → Chemo",
+                 "Chemo → TDXd", 
+                 "TDXd → Chemo", 
+                 "TDXd → SG")
+# expression(paste("Chemo", ""%right%"", "Chemo", sep = ""))
 df_costs <- df_psa[, c(2, 5, 8, 11)]
 df_qalys <- df_psa[, c(3, 6, 9, 12)]
 df_lys   <- df_psa[, c(4, 7, 10, 13)]
@@ -22,7 +27,7 @@ colnames(l_psa$cost) <- v_names_str
 v_wtp <- seq(0, 700000, by = 5000)
 
 ### Cost-Effectiveness Scatter plot ----
-txtsize <- 14
+txtsize <- 16
 gg_scattter <- plot(l_psa, txtsize = txtsize) +
   ggthemes::scale_color_colorblind() +
   ggthemes::scale_fill_colorblind() +
@@ -33,6 +38,7 @@ gg_scattter <- plot(l_psa, txtsize = txtsize) +
   guides(col = guide_legend(nrow = 2)) +
   theme(legend.position = "bottom")
 gg_scattter
+ggsave(gg_scattter, filename = "figs/cea_scatter.png", width = 8, height = 6, dpi = 300)
 
 ### Incremental cost-effectiveness ratios (ICERs) with probabilistic output ----
 #* Compute expected costs and effects for each strategy from the PSA
@@ -51,11 +57,15 @@ ceac_obj <- dampack::ceac(wtp = v_wtp, psa = l_psa)
 #* Regions of highest probability of cost-effectiveness for each strategy
 summary(ceac_obj)
 #* CEAC & CEAF plot
-gg_ceac <- plot(ceac_obj, txtsize = txtsize, xlim = c(0, NA), n_x_ticks = 14) +
+gg_ceac <- plot(ceac_obj, 
+                txtsize = txtsize, xlim = c(0, NA), n_x_ticks = 16) +
+  xlab("Cost-effectiveness threshold (Thousand $/QALY)") +
+  ylab("Probability of being cost-effective") +
   ggthemes::scale_color_colorblind() +
   ggthemes::scale_fill_colorblind() +
   theme(legend.position = c(0.2, 0.48))
 gg_ceac
+ggsave(gg_ceac, filename = "figs/ceac.png", width = 8, height = 6, dpi = 300)
 
 ### Expected Loss Curves (ELCs) ----
 elc_obj <- dampack::calc_exp_loss(wtp = v_wtp, psa = l_psa)
